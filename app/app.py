@@ -30,8 +30,8 @@ def get_hero(id):
     if hero is None:
         return make_response(jsonify({"error": "Hero not found"}), 404)
     powers_dict = [
-        {"id": power.id, "name": power.name, "description": power.description}
-        for power in hero.powers
+        {"id": hero_power.power.id, "name": hero_power.power.name, "description": hero_power.power.description}
+        for hero_power in hero.powers
     ]
     hero_dict = {
         "id": hero.id,
@@ -40,6 +40,7 @@ def get_hero(id):
         "powers": powers_dict
     }
     return make_response(jsonify(hero_dict), 200)
+
 
 @app.route('/powers', methods=['GET'])
 def get_powers():
