@@ -4,6 +4,11 @@ from app import app
 
 def seed_data():
     with app.app_context():
+        # Check if there are already heroes in the database
+        if Hero.query.first() is not None:
+            print("Database is already seeded. Skipping...")
+            return
+        
         # Seeding powers
         print("🦸‍♀️ Seeding powers...")
         powers = [
