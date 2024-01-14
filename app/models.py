@@ -1,5 +1,6 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
+from sqlalchemy.schema import CheckConstraint
 
 db = SQLAlchemy()
 
@@ -16,6 +17,7 @@ class Power(db.Model):
     name = db.Column(db.String(50))
     description = db.Column(db.String(120), nullable=False)
     heroes = relationship('HeroPower', back_populates='power')
+    __table_args__ = (CheckConstraint(length(description) >= 20, name='description_length'),)
 
 class HeroPower(db.Model):
     __tablename__ = 'hero_powers'
