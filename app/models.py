@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import relationship
 from sqlalchemy import event
+from sqlalchemy.sql import func
 
 db = SQLAlchemy()
 
@@ -10,6 +11,8 @@ class Hero(db.Model):
     name = db.Column(db.String(50))
     super_name = db.Column(db.String(50))
     powers = relationship('HeroPower', back_populates='hero')
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
 
 class Power(db.Model):
     __tablename__ = 'powers'
@@ -17,6 +20,8 @@ class Power(db.Model):
     name = db.Column(db.String(50))
     description = db.Column(db.String(120), nullable=False)
     heroes = relationship('HeroPower', back_populates='power')
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
 
 @event.listens_for(Power.description, 'set', retval=True)
 def validate_description(target, value, oldvalue, initiator):
@@ -32,3 +37,5 @@ class HeroPower(db.Model):
     power_id = db.Column(db.Integer, db.ForeignKey('powers.id'))
     hero = relationship('Hero', back_populates='powers')
     power = relationship('Power', back_populates='heroes')
+    created_at = db.Column(db.DateTime(timezone=True), server_default=func.now())
+    updated_at = db.Column(db.DateTime(timezone=True), onupdate=func.now())
