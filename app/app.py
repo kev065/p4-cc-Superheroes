@@ -13,6 +13,12 @@ db.init_app(app)
 from models import ma
 ma.init_app(app)
 
+# Create schema instances
+hero_schema = HeroSchema()
+heroes_schema = HeroSchema(many=True)
+power_schema = PowerSchema()
+powers_schema = PowerSchema(many=True)
+
 @app.route('/')
 def home():
     return ('''<h1> Superheroes API</h1>
