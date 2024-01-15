@@ -3,8 +3,10 @@ from sqlalchemy.orm import relationship, validates
 from sqlalchemy import event
 from sqlalchemy.sql import func
 from datetime import datetime
+from flask_marshmallow import Marshmallow
 
 db = SQLAlchemy()
+ma = Marshmallow()
 
 class Hero(db.Model):
     __tablename__ = 'heroes'
@@ -47,3 +49,19 @@ class HeroPower(db.Model):
         if not any(substring in strength for substring in strength_list):
             raise ValueError("Invalid strength value. Accepted values are 'Strong', 'Weak', or 'Average'.")
         return strength
+
+class PowerSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Power
+        include_fk = True
+
+class HeroPowerSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = HeroPower
+        include_fk = True
+
+class HeroSchema(ma.SQLAlchemyAutoSchema):
+    class Meta:
+        model = Hero
+        include_fk = True
+    powers = ma.Nested(HeroPowerSchema, many=True)
