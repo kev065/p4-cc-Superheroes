@@ -1,13 +1,17 @@
 from models import db, Hero, Power, HeroPower
 from random import choice, randint
 from app import app
+from sqlalchemy import MetaData
 
 def seed_data():
     with app.app_context():
-        # Check if there are already heroes in the database
-        if Hero.query.first() is not None:
-            print("Database is already seeded. Skipping...")
-            return
+        # Clear the database
+        print("🗑️ Clearing the database...")
+        meta = db.metadata
+        for table in reversed(meta.sorted_tables):
+            print(f'Clear table {table}')
+            db.session.execute(table.delete())
+        db.session.commit()
         
         # Seeding powers
         print("🦸‍♀️ Seeding powers...")
